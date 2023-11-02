@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -19,22 +20,22 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < numberOfNPCsToSpawn; i++)
         {
             Vector3 randomPosition = RandomGroundPosition();
-            Instantiate(npcPrefab, randomPosition, Quaternion.identity);
+            GameObject npc = Instantiate(npcPrefab, randomPosition, Quaternion.identity);
+            if(npc != null) GameManager.npcs.Add(npc.GetComponent<NPC>());
         }
     }
 
     private Vector3 RandomGroundPosition()
     {
         Vector3 randomPosition = Random.insideUnitSphere * spawnRadius + transform.position;
-        Ray ray = new Ray(randomPosition, Vector3.down);
-        RaycastHit hit;
+        randomPosition.y = 1;
+        Ray ray = new(randomPosition, Vector3.down);
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
         {
             return hit.point;
         }
 
-        // If no ground was found, return the original position
         return randomPosition;
     }
 }

@@ -8,8 +8,16 @@ public class NPC : MonoBehaviour
     private Vector3 initialPosition;
     private Vector3 targetPosition;
 
+    public enum NpcState {
+        NPC_Idle,
+        NPC_Working
+    }
+
+    public NpcState state;
+
     private void Start()
     {
+        state = NpcState.NPC_Idle;
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
         SetRandomDestination();
@@ -17,11 +25,15 @@ public class NPC : MonoBehaviour
 
     private void Update()
     {
-        // Check if the NPC has reached its destination
-        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.1f)
+        switch(state)
         {
-            SetRandomDestination();
+            case NpcState.NPC_Idle:
+                if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.1f) SetRandomDestination();
+                break;
+            case NpcState.NPC_Working:
+                break;
         }
+        
     }
 
     private void SetRandomDestination()

@@ -53,6 +53,16 @@ public class CameraController : MonoBehaviour
     //dragging
     private Vector3 startDrag;
 
+    //clicking
+    private float lastClickTime;
+    private float doubleClickTimeThreshold = 0.2f;
+
+    //object focusing
+    private GameObject initialObjectClicked;
+    private GameObject focusTarget;
+    // [SerializeField]
+    // LayerMask groundLayer;
+
     private void Awake()
     {
         cameraActions = new CameraControlActions();
@@ -81,12 +91,15 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         GetKeyboardMovement();
+        GetMouseInput();
         if(useScreenEdge) CheckMouseAtScreenEdge();
         DragCamera();
 
         UpdateVelocity();
         UpdateCameraPosition();
-        UpdateBasePosition();        
+        UpdateBasePosition();       
+
+        if(focusTarget != null) FollowFocus();
     }
 
     private void UpdateVelocity()
@@ -171,11 +184,27 @@ public class CameraController : MonoBehaviour
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Vector3 moveDirection = Vector3.zero;
 
-        if(mousePosition.x < edgeTolerance * Screen.width) moveDirection += -GetCameraRight();
-        else if(mousePosition.x > (1f - edgeTolerance) * Screen.width) moveDirection += GetCameraRight();
-        
-        if(mousePosition.y < edgeTolerance * Screen.height) moveDirection += -GetCameraForward();
-        else if(mousePosition.y > (1f - edgeTolerance) * Screen.height) moveDirection += GetCameraForward();
+        if(mousePosition.x < edgeTolerance * Screen.width) 
+        {
+            // focusTarget = null;
+            moveDirection += -GetCameraRight();
+        }
+        else if(mousePosition.x > (1f - edgeTolerance) * Screen.width) 
+        {
+            focusTarget = null;
+            moveDirection += GetCameraRight();
+        }
+
+        if(mousePosition.y < edgeTolerance * Screen.height)
+        {
+            // focusTarget = null;
+            moveDirection += -GetCameraForward();
+        }
+        else if(mousePosition.y > (1f - edgeTolerance) * Screen.height)
+        {
+            focusTarget = null;
+            moveDirection += GetCameraForward();
+        }
         
         targetPosition += moveDirection;
     }
@@ -183,6 +212,8 @@ public class CameraController : MonoBehaviour
     private void DragCamera()
     {
         if(!Mouse.current.rightButton.isPressed) return;
+
+        focusTarget = null;
 
         Plane plane = new(Vector3.up, Vector3.zero);
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -193,4 +224,43 @@ public class CameraController : MonoBehaviour
             else targetPosition += startDrag - ray.GetPoint(distance);
         }
     }   
+
+    private void GetMouseInput()
+    {
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            float timeSinceLastClick = Time.time - lastClickTime;
+
+            //Raycast to check what we clicked on
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                GameObject clickedObject = hit.transform.gameObject;
+                if(!clickedObject.CompareTag("Ignore")) initialObjectClicked = clickedObject;
+            }
+
+            //click code
+            if (timeSinceLastClick <= doubleClickTimeThreshold)
+            {
+                // A double-click occurred
+                focusTarget = initialObjectClicked;
+                GameManager.instance.focusObject = focusTarget;
+                // Debug.Log(focusTarget);
+            }
+            else
+            {
+                // Single click
+                lastClickTime = Time.time;
+                initialObjectClicked = null;
+            }
+        }
+    }
+
+    private void FollowFocus()
+    {
+
+        transform.localPosition = new(focusTarget.transform.position.x, 0f, focusTarget.transform.position.z);
+    }
 }
