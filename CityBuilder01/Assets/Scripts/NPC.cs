@@ -10,10 +10,22 @@ public class NPC : MonoBehaviour
 
     public enum NpcState {
         NPC_Idle,
-        NPC_Working
+        NPC_Working,
+        NPC_Sleeping,
+        NPC_Talking
     }
 
     public NpcState state;
+
+    public enum NpcJob {
+        NPC_Wood,
+        NPC_Stone,
+        NPC_Food
+    }
+
+    public NpcJob job;
+
+    [SerializeField] private Animator animator;
 
     private void Start()
     {
@@ -25,27 +37,55 @@ public class NPC : MonoBehaviour
 
     private void Update()
     {
+        if(GameManager.instance.timeOfDay == GameManager.TimeOfDay.Day) state = NpcState.NPC_Working;
+        else state = NpcState.NPC_Idle;
+
         switch(state)
         {
             case NpcState.NPC_Idle:
-                if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.1f) SetRandomDestination();
+                SetRandomDestination();
                 break;
             case NpcState.NPC_Working:
+                JobHandler();
                 break;
         }
+
+        if(animator != null) AnimHandler();
         
+    }
+
+    private void JobHandler()
+    {
+        switch(job)
+        {
+            case NpcJob.NPC_Wood:
+                break;
+            case NpcJob.NPC_Food:
+                break;
+            case NpcJob.NPC_Stone:
+                break;
+        }
+    }
+
+    void AnimHandler()
+    {
+        animator.SetBool("moving", navMeshAgent.velocity.magnitude > 0.1f);
+        animator.SetBool("talking", state == NpcState.NPC_Working); //temp
+        animator.SetBool("sleeping", state == NpcState.NPC_Sleeping);
     }
 
     private void SetRandomDestination()
     {
-        Vector3 randomDirection = Random.insideUnitSphere * wanderRange;
-        randomDirection += initialPosition;
-
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomDirection, out hit, wanderRange, NavMesh.AllAreas))
+        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.1f)
         {
-            targetPosition = hit.position;
-            navMeshAgent.SetDestination(targetPosition);
+            Vector3 randomDirection = Random.insideUnitSphere * wanderRange;
+            randomDirection += initialPosition;
+
+            if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRange, NavMesh.AllAreas))
+            {
+                targetPosition = hit.position;
+                navMeshAgent.SetDestination(targetPosition);
+            }
         }
     }
 }

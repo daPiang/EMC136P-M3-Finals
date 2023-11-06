@@ -8,7 +8,7 @@ public class ResourceBuilding : MonoBehaviour
     private int npcCountMax = 2;
     [SerializeField] private int baseReward;
     private float rewardTimer = 0;
-    private List<NPC> workers = new();
+    private GameObject[] workers;
 
     private void Update() {
         rewardTimer += Time.deltaTime;
@@ -19,28 +19,33 @@ public class ResourceBuilding : MonoBehaviour
             GameManager.instance.foodCount += baseReward;
         }
 
-        npcCount = workers.Count;
+        // npcCount = workers.Length;
     }
 
-    public void AddWorker()
-    {
-        if(npcCount != npcCountMax)
-        {
-            NPC idleWorker = GameManager.instance.FindNpcByState(NPC.NpcState.NPC_Idle);
-            idleWorker.state = NPC.NpcState.NPC_Working;
-            workers.Add(idleWorker);
-        }
-    }
+    // public void AddWorker()
+    // {
+    //     GameObject idleWorker = GameManager.instance.FindNpcByState(NPC.NpcState.NPC_Idle);
+    //     // Debug.Log("Before state change: " + idleWorker);
+    //     // idleWorker.GetComponent<NPC>().state = NPC.NpcState.NPC_Working;
+    //     // idleWorker.ChangeState(NPC.NpcState.NPC_Working);
+    //     // Debug.Log("After state change: " + idleWorker);
+    //     workers.Add(idleWorker);
+    //     workers[workers.Count - workers.Count].GetComponent<NPC>().state = NPC.NpcState.NPC_Working;
+    //     Debug.Log(workers.Count);
+    //     // Debug.Log("Added: " + idleWorker + " to list!");
+    // }
 
-    public void RemoveWorker()
-    {
-        NPC worker = FindWorkingNPC();
-        worker.state = NPC.NpcState.NPC_Idle;
-        workers.Remove(worker);
-    }
+    // public void RemoveWorker()
+    // {
+    //     GameObject worker = FindWorkingNPC();
+    //     // worker.GetComponent<NPC>().state = NPC.NpcState.NPC_Idle;
+    //     workers[workers.Count - workers.Count].GetComponent<NPC>().state = NPC.NpcState.NPC_Idle;
+    //     workers.Remove(worker);
+    //     Debug.Log(workers.Count);
+    // }
 
-    public NPC FindWorkingNPC()
-    {
-        return GameManager.instance.FindNpcByState(NPC.NpcState.NPC_Working, workers);
-    }
+    // public GameObject FindWorkingNPC()
+    // {
+    //     return GameManager.instance.FindNpcByState(NPC.NpcState.NPC_Working, workers);
+    // }
 }

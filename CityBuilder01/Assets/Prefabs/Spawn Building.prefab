@@ -135,7 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 958ca892339973a43be1116154ddd48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcPrefab: {fileID: 7897704791409665537, guid: 13dd8eb545834a24699719f717e4b3e4,
-    type: 3}
-  numberOfNPCsToSpawn: 10
+  npcPrefabs:
+  - {fileID: 2127182102145542306, guid: 13dd8eb545834a24699719f717e4b3e4, type: 3}
+  - {fileID: 5181808672673135748, guid: d9b1b5bd9391dd14c9aafcd81c65cede, type: 3}
+  - {fileID: 7897704791409665537, guid: 9113c175229da5549badc48da3257f8d, type: 3}
   spawnRadius: 10

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,50 +12,79 @@ public class GameManager : MonoBehaviour
     public int woodCount;
     public int stoneCount;
 
-    public static List<NPC> npcs = new();
+    public static GameObject[] npcs;
 
     public GameObject focusObject;
 
+    public enum TimeOfDay
+    {
+        Day,
+        Night
+    }
+
+    public TimeOfDay timeOfDay;
+
     private void Awake()
     {
-        if(instance != null && instance != this) Destroy(this);
+        if(instance != null && instance != this) Destroy(gameObject);
         else instance = this;
+    }
+
+    private void Start()
+    {
+        timeOfDay = TimeOfDay.Day;
     }
 
     private void Update()
     {
-        npcCount = npcs.Count;
-    }
 
-    public NPC FindNpcByState(NPC.NpcState state, List<NPC> list)
-    {
-        for(int i = 0; i < list.Count - 1; i++)
+        // Debug.Log(Sun.rotation.eulerAngles.x);
+        npcCount = GameObject.FindGameObjectsWithTag("NPC").Length;
+
+        if(Sun.rotation.eulerAngles.x >= 0f && Sun.rotation.eulerAngles.x <= 90f)
         {
-            NPC npc = list[i];
-            if(npc.state == state)
-            {
-                return npc;
-            }
+            Debug.Log("It's Day");
+            timeOfDay = TimeOfDay.Day;
         }
-
-        Debug.LogError("No NPCs with " + state + " found!");
-
-        return null;
-    }
-
-    public NPC FindNpcByState(NPC.NpcState state)
-    {
-        for(int i = 0; i < npcs.Count - 1; i++)
+        else if(Sun.rotation.eulerAngles.x >= 270f && Sun.rotation.eulerAngles.x <= 360f)
         {
-            NPC npc = npcs[i];
-            if(npc.state == state)
-            {
-                return npc;
-            }
+            Debug.Log("It's Night");
+            timeOfDay = TimeOfDay.Night;
         }
-
-        Debug.LogError("No NPCs with " + state + " found!");
-
-        return null;
     }
+
+    // public GameObject FindNpcByState(NPC.NpcState state, List<GameObject> list)
+    // {
+    //     for (int i = 0; i < list.Count; i++) // Change here: iterate until i < list.Count
+    //     {
+    //         GameObject npc = list[i];
+    //         if (npc.GetComponent<NPC>().state == state)
+    //         {
+    //             Debug.Log("Found NPC #" + i);
+    //             return npc;
+    //         }
+    //     }
+
+    //     Debug.LogError("No NPCs with " + state + " found!");
+
+    //     return null;
+    // }
+
+    // public GameObject FindNpcByState(NPC.NpcState state)
+    // {
+    //     for (int i = 0; i < npcs.Count; i++) // Change here: iterate until i < npcs.Count
+    //     {
+    //         GameObject npc = npcs[i];
+    //         if (npc.GetComponent<NPC>().state == state)
+    //         {
+    //             Debug.Log("Found NPC #" + i);
+    //             return npc;
+    //         }
+    //     }
+
+    //     Debug.LogError("No NPCs with " + state + " found!");
+
+    //     return null;
+    // }
+
 }

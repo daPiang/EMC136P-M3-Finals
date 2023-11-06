@@ -18,7 +18,7 @@ public class UiManager : MonoBehaviour
     {
         if (instance != null && instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
@@ -61,7 +61,8 @@ public class UiManager : MonoBehaviour
             ResourceBuilding resourceBuilding = GameManager.instance.focusObject.GetComponent<ResourceBuilding>();
             if (resourceBuilding != null)
             {
-                resourceBuilding.AddWorker();
+                // resourceBuilding.AddWorker();
+                Debug.Log("Added Worker!");
             }
         }
     }
@@ -73,7 +74,8 @@ public class UiManager : MonoBehaviour
             ResourceBuilding resourceBuilding = GameManager.instance.focusObject.GetComponent<ResourceBuilding>();
             if (resourceBuilding != null)
             {
-                resourceBuilding.RemoveWorker();
+                // resourceBuilding.RemoveWorker();
+                Debug.Log("Removed Worker!");
             }
         }
     }
