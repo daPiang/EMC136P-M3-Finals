@@ -2,6 +2,8 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
+//DEPRECATED
+
 public class Spawner : MonoBehaviour
 {
     public GameObject[] npcPrefabs;

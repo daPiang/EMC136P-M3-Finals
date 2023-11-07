@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,68 +10,86 @@ public class NPC : MonoBehaviour
     private Vector3 targetPosition;
 
     public enum NpcState {
+        NPC_Wandering,
         NPC_Idle,
+        NPC_Walking,
         NPC_Working,
         NPC_Sleeping,
-        NPC_Talking
+        NPC_Talking,
+        NPC_ForceTalking,
+        NPC_FollowSched
     }
 
     public NpcState state;
 
     public enum NpcJob {
-        NPC_Wood,
-        NPC_Stone,
-        NPC_Food
+        NPC_Janitor,
+        NPC_Farmer,
+        NPC_Chef
     }
 
     public NpcJob job;
 
     [SerializeField] private Animator animator;
 
+    [SerializeField] private Schedule[] scheduleArray;
+    private int scheduleIndex = 0;
+
     private void Start()
     {
-        state = NpcState.NPC_Idle;
+        state = NpcState.NPC_Wandering;
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
-        SetRandomDestination();
+        // SetRandomDestination();
     }
 
     private void Update()
     {
-        if(GameManager.instance.timeOfDay == GameManager.TimeOfDay.Day) state = NpcState.NPC_Working;
-        else state = NpcState.NPC_Idle;
+        // if(GameManager.instance.timeOfDay == GameManager.TimeOfDay.Day) state = NpcState.NPC_Working;
+        // else state = NpcState.NPC_Idle;
 
         switch(state)
         {
-            case NpcState.NPC_Idle:
-                SetRandomDestination();
+            case NpcState.NPC_Wandering:
+                // SetRandomDestination();
                 break;
-            case NpcState.NPC_Working:
-                JobHandler();
+            case NpcState.NPC_FollowSched:
+                // ScheduleHandler();
                 break;
         }
 
         if(animator != null) AnimHandler();
+        if(scheduleArray != null) ScheduleHandler();
         
     }
 
-    private void JobHandler()
+    private void ScheduleHandler()
     {
-        switch(job)
+        DateTime time = TimeManager.instance.GetCurrentTime();
+        Schedule sched = scheduleArray[scheduleIndex];
+        Vector3 destination = new(sched.pointInWorldToWalkTo.x, transform.position.y, sched.pointInWorldToWalkTo.z);
+
+        // Debug.Log("Task: " + sched.scheduledTask);
+        // Debug.Log("Schedule Index: " + scheduleIndex);
+        if(time.Hour == sched.hour && time.Minute == sched.minute) //Check if NPC should start walking to destination
         {
-            case NpcJob.NPC_Wood:
-                break;
-            case NpcJob.NPC_Food:
-                break;
-            case NpcJob.NPC_Stone:
-                break;
+            state = NpcState.NPC_Walking; //FOR WALKING
+            navMeshAgent.SetDestination(destination);
+        }
+
+        // Debug.Log(navMeshAgent.destination);
+        if(Vector3.Distance(transform.position, destination) < 0.1f) //Check if NPC is at destination
+        {
+            state = sched.npcStateAtDestination; //Once at destination, change state to do task
+            scheduleIndex = (scheduleIndex + 1) % scheduleArray.Length;
         }
     }
 
     void AnimHandler()
     {
         animator.SetBool("moving", navMeshAgent.velocity.magnitude > 0.1f);
-        animator.SetBool("talking", state == NpcState.NPC_Working); //temp
+        animator.SetBool("talking", state == NpcState.NPC_Talking || state == NpcState.NPC_ForceTalking);
+        animator.SetBool("working", state == NpcState.NPC_Working);
         animator.SetBool("sleeping", state == NpcState.NPC_Sleeping);
     }
 
@@ -78,7 +97,7 @@ public class NPC : MonoBehaviour
     {
         if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.1f)
         {
-            Vector3 randomDirection = Random.insideUnitSphere * wanderRange;
+            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * wanderRange;
             randomDirection += initialPosition;
 
             if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRange, NavMesh.AllAreas))

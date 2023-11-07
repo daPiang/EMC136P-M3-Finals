@@ -1123,7 +1123,7 @@ GameObject:
   - component: {fileID: -147663768925550744}
   - component: {fileID: 5827724678201117344}
   m_Layer: 0
-  m_Name: Food_NPC
+  m_Name: Chef_NPC
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1183,6 +1183,17 @@ MonoBehaviour:
   state: 0
   job: 2
   animator: {fileID: 2372525015291033858}
+  scheduleArray:
+  - scheduledTask: 
+    hour: 0
+    minute: 0
+    npcStateAtDestination: 0
+    pointInWorldToWalkTo: {x: 0, y: 0, z: 0}
+  - scheduledTask: 
+    hour: 0
+    minute: 0
+    npcStateAtDestination: 0
+    pointInWorldToWalkTo: {x: 0, y: 0, z: 0}
 --- !u!136 &5827724678201117344
 CapsuleCollider:
   m_ObjectHideFlags: 0

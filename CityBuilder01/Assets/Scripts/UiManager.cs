@@ -9,7 +9,7 @@ public class UiManager : MonoBehaviour
     public static UiManager instance;
 
     [SerializeField] private TextMeshProUGUI npcCount;
-    [SerializeField] private TextMeshProUGUI foodCount;
+    [SerializeField] private TextMeshProUGUI goldCount;
     [SerializeField] private GameObject BuildingPanel;
     [SerializeField] private Button addButton;
     [SerializeField] private Button removeButton;
@@ -34,7 +34,7 @@ public class UiManager : MonoBehaviour
     private void Update()
     {
         npcCount.text = GameManager.instance.npcCount.ToString();
-        foodCount.text = GameManager.instance.foodCount.ToString();
+        goldCount.text = GameManager.instance.goldCount.ToString();
 
         if (GameManager.instance.focusObject != null && GameManager.instance.focusObject.CompareTag("Building"))
         {

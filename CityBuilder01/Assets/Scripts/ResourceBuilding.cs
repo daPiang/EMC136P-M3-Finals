@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//DEPRECATED
+
 public class ResourceBuilding : MonoBehaviour
 {
     private int npcCount = 0;
@@ -16,7 +18,7 @@ public class ResourceBuilding : MonoBehaviour
         if(npcCount > 0 && rewardTimer > 1)
         {
             rewardTimer = 0;
-            GameManager.instance.foodCount += baseReward;
+            // GameManager.instance.foodCount += baseReward;
         }
 
         // npcCount = workers.Length;

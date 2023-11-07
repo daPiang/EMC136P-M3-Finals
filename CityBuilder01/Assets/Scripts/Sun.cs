@@ -1,5 +1,7 @@
 using UnityEngine;
 
+//DEPRECATED
+
 public class Sun : MonoBehaviour
 {
     [SerializeField] private float rotationSpeed = 10f;

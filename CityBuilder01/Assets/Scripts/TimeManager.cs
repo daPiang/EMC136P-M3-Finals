@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    public static TimeManager instance;
+
     [SerializeField] private float timeMultiplier;
     [SerializeField] private float startHour;
     [SerializeField] private float sunriseHour;
@@ -21,7 +23,12 @@ public class TimeManager : MonoBehaviour
     private DateTime currentTime;
     private TimeSpan sunriseTime;
     private TimeSpan sunsetTime;
-    
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         currentTime = DateTime.Now.Date + TimeSpan.FromHours(startHour);
@@ -87,5 +94,10 @@ public class TimeManager : MonoBehaviour
        }
 
        sunLight.transform.rotation = Quaternion.AngleAxis(sunLightRotation, Vector3.right);
+    }
+
+    public DateTime GetCurrentTime()
+    {
+        return currentTime;
     }
 }
