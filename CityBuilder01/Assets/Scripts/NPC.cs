@@ -11,8 +11,8 @@ public class NPC : MonoBehaviour
 
     public enum NpcState {
         NPC_Wandering,
-        NPC_Idle,
-        NPC_Walking,
+        NPC_Waiting,
+        NPC_WalkingToDestination,
         NPC_Working,
         NPC_Sleeping,
         NPC_Talking,
@@ -22,14 +22,6 @@ public class NPC : MonoBehaviour
 
     public NpcState state;
 
-    public enum NpcJob {
-        NPC_Janitor,
-        NPC_Farmer,
-        NPC_Chef
-    }
-
-    public NpcJob job;
-
     [SerializeField] private Animator animator;
 
     [SerializeField] private Schedule[] scheduleArray;
@@ -37,7 +29,7 @@ public class NPC : MonoBehaviour
 
     private void Start()
     {
-        state = NpcState.NPC_Wandering;
+        state = NpcState.NPC_Sleeping;
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
         // SetRandomDestination();
@@ -45,13 +37,10 @@ public class NPC : MonoBehaviour
 
     private void Update()
     {
-        // if(GameManager.instance.timeOfDay == GameManager.TimeOfDay.Day) state = NpcState.NPC_Working;
-        // else state = NpcState.NPC_Idle;
-
         switch(state)
         {
             case NpcState.NPC_Wandering:
-                // SetRandomDestination();
+                SetRandomDestination();
                 break;
             case NpcState.NPC_FollowSched:
                 // ScheduleHandler();
@@ -60,7 +49,6 @@ public class NPC : MonoBehaviour
 
         if(animator != null) AnimHandler();
         if(scheduleArray != null) ScheduleHandler();
-        
     }
 
     private void ScheduleHandler()
@@ -73,7 +61,7 @@ public class NPC : MonoBehaviour
         // Debug.Log("Schedule Index: " + scheduleIndex);
         if(time.Hour == sched.hour && time.Minute == sched.minute) //Check if NPC should start walking to destination
         {
-            state = NpcState.NPC_Walking; //FOR WALKING
+            state = NpcState.NPC_WalkingToDestination; //FOR WALKING
             navMeshAgent.SetDestination(destination);
         }
 
