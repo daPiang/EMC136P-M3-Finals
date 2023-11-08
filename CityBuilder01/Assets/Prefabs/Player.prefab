@@ -1202,6 +1202,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60135d80e143f504aa23ecd00f4f93fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  navMeshAgent: {fileID: 4454586905740611455}
+  animator: {fileID: 2372525015291033858}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 62
+  state: 1
 --- !u!1 &7926405943497412384
 GameObject:
   m_ObjectHideFlags: 0

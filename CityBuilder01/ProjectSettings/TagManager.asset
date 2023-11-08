@@ -8,6 +8,7 @@ TagManager:
   - Building
   - NPC
   - NavMesh Ground
+  - Button
   layers:
   - Default
   - TransparentFX

@@ -9,9 +9,7 @@ public class GameManager : MonoBehaviour
 
     public int npcCount;
     public float goldCount;
-    public float goldReward = 10;
-    public NPC[] npcs;
-
+    public float goldReward = 420;
     public GameObject focusObject;
 
     public enum TimeOfDay
@@ -22,6 +20,9 @@ public class GameManager : MonoBehaviour
 
     public TimeOfDay timeOfDay;
 
+    [SerializeField] private Transform playerTransform;
+    [SerializeField] private Transform cameraTransform;
+
     private void Awake()
     {
         if(instance != null && instance != this) Destroy(gameObject);
@@ -31,15 +32,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         timeOfDay = TimeOfDay.Day;
+
+        cameraTransform.position = new(playerTransform.position.x, 0, playerTransform.position.z); //TPs the camera to center on the player
     }
 
     private void Update()
     {
-
-        // Debug.Log(Sun.rotation.eulerAngles.x);
-        npcCount = GameObject.FindGameObjectsWithTag("NPC").Length;
-        // goldCount += goldReward * npcCount + Time.deltaTime;
-
         if(TimeManager.instance.GetCurrentTime().Hour >= 6f && TimeManager.instance.GetCurrentTime().Hour <= 20.5f)
         {
             // Debug.Log("It's Day");
@@ -49,6 +47,11 @@ public class GameManager : MonoBehaviour
         {
             // Debug.Log("It's Night");
             timeOfDay = TimeOfDay.Night;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit(0);
         }
     }
 }

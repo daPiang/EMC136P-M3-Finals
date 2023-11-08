@@ -245,8 +245,8 @@ public class CameraController : MonoBehaviour
             if (timeSinceLastClick <= doubleClickTimeThreshold * Time.timeScale)
             {
                 // A double-click occurred
-                focusTarget = initialObjectClicked;
-                GameManager.instance.focusObject = focusTarget;
+                // focusTarget = initialObjectClicked;
+                // GameManager.instance.focusObject = focusTarget;
                 // Debug.Log(focusTarget);
             }
             else

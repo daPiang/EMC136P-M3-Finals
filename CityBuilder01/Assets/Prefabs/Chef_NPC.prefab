@@ -1188,26 +1188,37 @@ MonoBehaviour:
     minute: 0
     npcStateAtDestination: 3
     pointInWorldToWalkTo: {x: 18, y: 0, z: 11}
+    willTalkToSomeone: 0
+    PersonToTalkTo: {fileID: 0}
   - scheduledTask: LUNCHBREAK
     hour: 12
     minute: 0
     npcStateAtDestination: 0
     pointInWorldToWalkTo: {x: 18, y: 0, z: 9}
+    willTalkToSomeone: 0
+    PersonToTalkTo: {fileID: 0}
   - scheduledTask: BACK TO WORK
     hour: 13
     minute: 30
     npcStateAtDestination: 3
     pointInWorldToWalkTo: {x: 18, y: 0, z: 11}
+    willTalkToSomeone: 0
+    PersonToTalkTo: {fileID: 0}
   - scheduledTask: QUITTING TIME
     hour: 18
     minute: 15
     npcStateAtDestination: 5
     pointInWorldToWalkTo: {x: 7, y: 0, z: 52}
+    willTalkToSomeone: 0
+    PersonToTalkTo: {fileID: 0}
   - scheduledTask: GO HOME
     hour: 21
     minute: 0
     npcStateAtDestination: 4
     pointInWorldToWalkTo: {x: 21, y: 0, z: -15}
+    willTalkToSomeone: 0
+    PersonToTalkTo: {fileID: 0}
+  scheduleIndex: 0
 --- !u!136 &5827724678201117344
 CapsuleCollider:
   m_ObjectHideFlags: 0

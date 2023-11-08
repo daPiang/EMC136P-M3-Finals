@@ -6,35 +6,28 @@ public class NPC : MonoBehaviour
 {
     public float wanderRange = 10.0f;
     private NavMeshAgent navMeshAgent;
-    private Vector3 initialPosition;
-    private Vector3 targetPosition;
+    private Vector3 patrolPoint;
 
     public enum NpcState {
         NPC_Wandering,
-        NPC_Waiting,
         NPC_WalkingToDestination,
         NPC_Working,
         NPC_Sleeping,
         NPC_Talking,
-        NPC_ForceTalking,
-        NPC_FollowSched,
         NPC_Dancing
     }
 
     public NpcState state;
-
     [SerializeField] private Animator animator;
-
     [SerializeField] private Schedule[] scheduleArray;
     [SerializeField] private int scheduleIndex = 0;
     private bool talking;
+    private bool hasMoved;
 
     private void Start()
     {
         state = NpcState.NPC_Sleeping;
         navMeshAgent = GetComponent<NavMeshAgent>();
-        initialPosition = transform.position;
-        // SetRandomDestination();
     }
 
     private void Update()
@@ -43,17 +36,6 @@ public class NPC : MonoBehaviour
         {
             case NpcState.NPC_Wandering:
                 SetRandomDestination();
-                break;
-            // case NpcState.NPC_FollowSched:
-            //     if(scheduleArray != null) ScheduleHandler();
-            //     break;
-            // case NpcState.NPC_ForceTalking:
-            //     // transform.LookAt();
-            //     //Look at player
-            //     //Wait for player and npc to finish talking
-            //     //change state
-            //     break;
-            case NpcState.NPC_Waiting:
                 break;
         }
 
@@ -65,16 +47,6 @@ public class NPC : MonoBehaviour
     {
         DateTime time = TimeManager.instance.GetCurrentTime();
         Schedule sched = scheduleArray[scheduleIndex];
-        Schedule prevSched;
-        if(scheduleIndex != 0)
-        {
-        prevSched = scheduleArray[scheduleIndex - 1];
-        } else prevSched = scheduleArray[scheduleArray.Length - 1];
-        Schedule nextSched;
-        if(scheduleIndex != scheduleArray.Length - 1)
-        {
-        nextSched = scheduleArray[scheduleIndex + 1];
-        } else prevSched = scheduleArray[0];
 
         Vector3 destination = new(sched.pointInWorldToWalkTo.x, transform.position.y, sched.pointInWorldToWalkTo.z);
 
@@ -85,16 +57,18 @@ public class NPC : MonoBehaviour
             {
                 state = NpcState.NPC_WalkingToDestination; //FOR WALKING
                 navMeshAgent.SetDestination(destination);
+                hasMoved = true;
             }
 
-            if(Vector3.Distance(transform.position, destination) < 0.1f) //Check if NPC is at destination
+            if(Vector3.Distance(transform.position, destination) < 0.1f && hasMoved) //Check if NPC is at destination
             {
                 state = sched.npcStateAtDestination; //Once at destination, change state to do task
                 scheduleIndex = (scheduleIndex + 1) % scheduleArray.Length;
                 talking = false;
+                hasMoved = false;
             }
         }
-        else
+        else //Code for if an NPC has to talk to someone
         {
             // Debug.Log("has someone to talk to");
             if(time.Hour >= sched.hour && time.Minute >= sched.minute && !talking)
@@ -120,7 +94,7 @@ public class NPC : MonoBehaviour
     void AnimHandler()
     {
         animator.SetBool("moving", navMeshAgent.velocity.magnitude > 0.1f);
-        animator.SetBool("talking", state == NpcState.NPC_Talking || state == NpcState.NPC_ForceTalking);
+        animator.SetBool("talking", state == NpcState.NPC_Talking);
         animator.SetBool("working", state == NpcState.NPC_Working);
         animator.SetBool("sleeping", state == NpcState.NPC_Sleeping);
         animator.SetBool("dancing", state == NpcState.NPC_Dancing);
@@ -128,19 +102,23 @@ public class NPC : MonoBehaviour
 
     private void SetRandomDestination()
     {
-        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.1f)
+        if (navMeshAgent.remainingDistance < 1f)
         {
-            // Calculate a random offset within the wanderRange from the NPC's current position.
-            Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * wanderRange;
-            Vector3 randomDirection = new(randomOffset.x, 0f, randomOffset.y);
-            Vector3 randomPosition = initialPosition + randomDirection;
-
-            if (NavMesh.SamplePosition(randomPosition, out NavMeshHit hit, wanderRange, NavMesh.AllAreas))
-            {
-                targetPosition = hit.position;
-                navMeshAgent.SetDestination(targetPosition);
-            }
+            // Debug.Log($"new Patrol point");
+            patrolPoint = GetRandomPoint();
+            navMeshAgent.SetDestination(patrolPoint);
         }
+    }
+
+    private Vector3 GetRandomPoint()
+    {
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * 10f;
+        randomDirection += transform.position;
+
+        NavMesh.SamplePosition(randomDirection, out NavMeshHit navHit, 10f, -1);
+
+        var destination = navHit.position;
+        return destination;
     }
 
 }

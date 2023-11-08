@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
@@ -10,9 +9,6 @@ public class UiManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI npcCount;
     [SerializeField] private TextMeshProUGUI goldCount;
-    [SerializeField] private GameObject BuildingPanel;
-    [SerializeField] private Button addButton;
-    [SerializeField] private Button removeButton;
     [SerializeField] private GameObject nightDecal, dayDecal;
 
     private void Awake()
@@ -29,12 +25,12 @@ public class UiManager : MonoBehaviour
 
     private void Start()
     {
-        BuildingPanel.SetActive(false);
+
     }
 
     private void Update()
     {
-        npcCount.text = GameManager.instance.npcCount.ToString();
+        // npcCount.text = GameManager.instance.npcCount.ToString();
         goldCount.text = GameManager.instance.goldCount.ToString();
 
         if(GameManager.instance.timeOfDay == GameManager.TimeOfDay.Day)
@@ -47,48 +43,5 @@ public class UiManager : MonoBehaviour
             dayDecal.SetActive(false);
             nightDecal.SetActive(true);
         }
-
-        // if (GameManager.instance.focusObject != null && GameManager.instance.focusObject.CompareTag("Building"))
-        // {
-        //     // BuildingPanel.SetActive(true);
-
-        //     // Add listeners to buttons
-        //     // addButton.onClick.AddListener(AddButton);
-        //     // removeButton.onClick.AddListener(RemoveButton);
-        // }
-        // else
-        // {
-        //     BuildingPanel.SetActive(false);
-
-        //     // Remove listeners if the BuildingPanel is not active
-        //     addButton.onClick.RemoveAllListeners();
-        //     removeButton.onClick.RemoveAllListeners();
-        // }
     }
-
-    // private void AddButton()
-    // {
-    //     if (GameManager.instance.focusObject != null)
-    //     {
-    //         ResourceBuilding resourceBuilding = GameManager.instance.focusObject.GetComponent<ResourceBuilding>();
-    //         if (resourceBuilding != null)
-    //         {
-    //             // resourceBuilding.AddWorker();
-    //             Debug.Log("Added Worker!");
-    //         }
-    //     }
-    // }
-
-    // private void RemoveButton()
-    // {
-    //     if (GameManager.instance.focusObject != null)
-    //     {
-    //         ResourceBuilding resourceBuilding = GameManager.instance.focusObject.GetComponent<ResourceBuilding>();
-    //         if (resourceBuilding != null)
-    //         {
-    //             // resourceBuilding.RemoveWorker();
-    //             Debug.Log("Removed Worker!");
-    //         }
-    //     }
-    // }
 }
