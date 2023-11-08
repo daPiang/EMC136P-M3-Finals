@@ -17,7 +17,8 @@ public class NPC : MonoBehaviour
         NPC_Sleeping,
         NPC_Talking,
         NPC_ForceTalking,
-        NPC_FollowSched
+        NPC_FollowSched,
+        NPC_Dancing
     }
 
     public NpcState state;
@@ -26,6 +27,7 @@ public class NPC : MonoBehaviour
 
     [SerializeField] private Schedule[] scheduleArray;
     [SerializeField] private int scheduleIndex = 0;
+    private bool talking;
 
     private void Start()
     {
@@ -63,25 +65,55 @@ public class NPC : MonoBehaviour
     {
         DateTime time = TimeManager.instance.GetCurrentTime();
         Schedule sched = scheduleArray[scheduleIndex];
+        Schedule prevSched;
+        if(scheduleIndex != 0)
+        {
+        prevSched = scheduleArray[scheduleIndex - 1];
+        } else prevSched = scheduleArray[scheduleArray.Length - 1];
+        Schedule nextSched;
+        if(scheduleIndex != scheduleArray.Length - 1)
+        {
+        nextSched = scheduleArray[scheduleIndex + 1];
+        } else prevSched = scheduleArray[0];
+
         Vector3 destination = new(sched.pointInWorldToWalkTo.x, transform.position.y, sched.pointInWorldToWalkTo.z);
 
-        // Debug.Log("Task: " + sched.scheduledTask);
-        // Debug.Log("Schedule Index: " + scheduleIndex);
-        if(time.Hour == sched.hour && time.Minute == sched.minute) //Check if NPC should start walking to destination
-        {
-            state = NpcState.NPC_WalkingToDestination; //FOR WALKING
-            // state = NpcState.NPC_FollowSched; //FOR WALKING
-            // navMeshAgent.ResetPath();
-            navMeshAgent.SetDestination(destination);
-        }
 
-        // Debug.Log(navMeshAgent.destination);
-        if(Vector3.Distance(transform.position, destination) < 0.1f) //Check if NPC is at destination
+        if(!sched.willTalkToSomeone) //Execute regular scheduling stuff if NPC will not talk someone on current queued sched
         {
-            state = sched.npcStateAtDestination; //Once at destination, change state to do task
-            scheduleIndex = (scheduleIndex + 1) % scheduleArray.Length;
-            // if(scheduleIndex != scheduleArray.Length) scheduleIndex++;
-            // else scheduleIndex = 0;
+            if(time.Hour == sched.hour && time.Minute == sched.minute) //Check if NPC should start walking to destination
+            {
+                state = NpcState.NPC_WalkingToDestination; //FOR WALKING
+                navMeshAgent.SetDestination(destination);
+            }
+
+            if(Vector3.Distance(transform.position, destination) < 0.1f) //Check if NPC is at destination
+            {
+                state = sched.npcStateAtDestination; //Once at destination, change state to do task
+                scheduleIndex = (scheduleIndex + 1) % scheduleArray.Length;
+                talking = false;
+            }
+        }
+        else
+        {
+            // Debug.Log("has someone to talk to");
+            if(time.Hour >= sched.hour && time.Minute >= sched.minute && !talking)
+            {
+                // Debug.Log("going to this person");
+                state = NpcState.NPC_WalkingToDestination; //FOR WALKING
+                navMeshAgent.SetDestination(sched.PersonToTalkTo.transform.position);
+            }
+
+            if(Vector3.Distance(transform.position, sched.PersonToTalkTo.transform.position) < 3f)
+            {
+                // Debug.Log("we are talking");
+                navMeshAgent.ResetPath();
+                talking = true;
+                state = NpcState.NPC_Talking;
+                transform.LookAt(sched.PersonToTalkTo.transform);
+                scheduleIndex = (scheduleIndex + 1) % scheduleArray.Length; //Move to next queued index if current sched has someone to talk to
+       
+            }
         }
     }
 
@@ -91,6 +123,7 @@ public class NPC : MonoBehaviour
         animator.SetBool("talking", state == NpcState.NPC_Talking || state == NpcState.NPC_ForceTalking);
         animator.SetBool("working", state == NpcState.NPC_Working);
         animator.SetBool("sleeping", state == NpcState.NPC_Sleeping);
+        animator.SetBool("dancing", state == NpcState.NPC_Dancing);
     }
 
     private void SetRandomDestination()
