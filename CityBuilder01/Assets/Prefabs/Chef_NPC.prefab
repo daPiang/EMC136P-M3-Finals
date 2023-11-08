@@ -1181,19 +1181,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wanderRange: 6
   state: 0
-  job: 2
   animator: {fileID: 2372525015291033858}
   scheduleArray:
-  - scheduledTask: 
-    hour: 0
+  - scheduledTask: GO TO WORK
+    hour: 7
+    minute: 0
+    npcStateAtDestination: 3
+    pointInWorldToWalkTo: {x: 18, y: 0, z: 11}
+  - scheduledTask: LUNCHBREAK
+    hour: 12
     minute: 0
     npcStateAtDestination: 0
-    pointInWorldToWalkTo: {x: 0, y: 0, z: 0}
-  - scheduledTask: 
-    hour: 0
+    pointInWorldToWalkTo: {x: 18, y: 0, z: 9}
+  - scheduledTask: BACK TO WORK
+    hour: 13
+    minute: 30
+    npcStateAtDestination: 3
+    pointInWorldToWalkTo: {x: 18, y: 0, z: 11}
+  - scheduledTask: QUITTING TIME
+    hour: 18
+    minute: 15
+    npcStateAtDestination: 5
+    pointInWorldToWalkTo: {x: 7, y: 0, z: 52}
+  - scheduledTask: GO HOME
+    hour: 21
     minute: 0
-    npcStateAtDestination: 0
-    pointInWorldToWalkTo: {x: 0, y: 0, z: 0}
+    npcStateAtDestination: 4
+    pointInWorldToWalkTo: {x: 21, y: 0, z: -15}
 --- !u!136 &5827724678201117344
 CapsuleCollider:
   m_ObjectHideFlags: 0

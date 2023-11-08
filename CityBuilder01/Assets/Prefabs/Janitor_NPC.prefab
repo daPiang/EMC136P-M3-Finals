@@ -13,6 +13,46 @@ PrefabInstance:
       propertyPath: job
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -147663768925550744, guid: 9113c175229da5549badc48da3257f8d,
+        type: 3}
+      propertyPath: scheduleArray.Array.data[0].pointInWorldToWalkTo.x
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -147663768925550744, guid: 9113c175229da5549badc48da3257f8d,
+        type: 3}
+      propertyPath: scheduleArray.Array.data[0].pointInWorldToWalkTo.z
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: -147663768925550744, guid: 9113c175229da5549badc48da3257f8d,
+        type: 3}
+      propertyPath: scheduleArray.Array.data[1].pointInWorldToWalkTo.x
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -147663768925550744, guid: 9113c175229da5549badc48da3257f8d,
+        type: 3}
+      propertyPath: scheduleArray.Array.data[1].pointInWorldToWalkTo.z
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: -147663768925550744, guid: 9113c175229da5549badc48da3257f8d,
+        type: 3}
+      propertyPath: scheduleArray.Array.data[2].pointInWorldToWalkTo.x
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -147663768925550744, guid: 9113c175229da5549badc48da3257f8d,
+        type: 3}
+      propertyPath: scheduleArray.Array.data[2].pointInWorldToWalkTo.z
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: -147663768925550744, guid: 9113c175229da5549badc48da3257f8d,
+        type: 3}
+      propertyPath: scheduleArray.Array.data[3].pointInWorldToWalkTo.z
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: -147663768925550744, guid: 9113c175229da5549badc48da3257f8d,
+        type: 3}
+      propertyPath: scheduleArray.Array.data[4].pointInWorldToWalkTo.x
+      value: 41
+      objectReference: {fileID: 0}
     - target: {fileID: 6360528037679365738, guid: 9113c175229da5549badc48da3257f8d,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -21,17 +61,17 @@ PrefabInstance:
     - target: {fileID: 7029425350965653463, guid: 9113c175229da5549badc48da3257f8d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 7029425350965653463, guid: 9113c175229da5549badc48da3257f8d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7029425350965653463, guid: 9113c175229da5549badc48da3257f8d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 7029425350965653463, guid: 9113c175229da5549badc48da3257f8d,
         type: 3}
@@ -71,7 +111,7 @@ PrefabInstance:
     - target: {fileID: 7897704791409665537, guid: 9113c175229da5549badc48da3257f8d,
         type: 3}
       propertyPath: m_Name
-      value: Stone_NPC
+      value: Janitor_NPC
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -104,7 +104,7 @@ public class CameraController : MonoBehaviour
 
     private void UpdateVelocity()
     {
-        horizontalVelocity = (transform.position - lastPostion) / Time.deltaTime;
+        horizontalVelocity = (transform.position - lastPostion) / Time.deltaTime / Time.timeScale;
         horizontalVelocity.y = 0;
         lastPostion = transform.position;
     }
@@ -138,12 +138,12 @@ public class CameraController : MonoBehaviour
     {
         if(targetPosition.sqrMagnitude > 0.1f)
         {
-            speed = Mathf.Lerp(speed, maxSpeed, Time.deltaTime * acceleration);
+            speed = Mathf.Lerp(speed, maxSpeed, Time.deltaTime * acceleration / Time.timeScale);
             transform.position += targetPosition * speed * Time.deltaTime;
         }
         else
         {
-            horizontalVelocity = Vector3.Lerp(horizontalVelocity, Vector3.zero, Time.deltaTime * damping);
+            horizontalVelocity = Vector3.Lerp(horizontalVelocity, Vector3.zero, Time.deltaTime * damping / Time.timeScale);
             transform.position += horizontalVelocity * Time.deltaTime;
         }
 
@@ -175,7 +175,7 @@ public class CameraController : MonoBehaviour
         Vector3 zoomTarget = new(cameraTransform.localPosition.x, zoomHeight, cameraTransform.localPosition.z);
         zoomTarget -= zoomSpeed * (zoomHeight - cameraTransform.localPosition.y) * Vector3.forward;
 
-        cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, zoomTarget, Time.deltaTime * zoomDampening);
+        cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, zoomTarget, Time.deltaTime * zoomDampening / Time.timeScale);
         cameraTransform.LookAt(transform);
     }
 
@@ -242,7 +242,7 @@ public class CameraController : MonoBehaviour
             }
 
             //click code
-            if (timeSinceLastClick <= doubleClickTimeThreshold)
+            if (timeSinceLastClick <= doubleClickTimeThreshold * Time.timeScale)
             {
                 // A double-click occurred
                 focusTarget = initialObjectClicked;

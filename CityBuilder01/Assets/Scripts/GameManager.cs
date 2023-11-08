@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
         // Debug.Log(Sun.rotation.eulerAngles.x);
         npcCount = GameObject.FindGameObjectsWithTag("NPC").Length;
-        goldCount += goldReward * npcCount + Time.deltaTime;
+        // goldCount += goldReward * npcCount + Time.deltaTime;
 
         if(TimeManager.instance.GetCurrentTime().Hour >= 6f && TimeManager.instance.GetCurrentTime().Hour <= 20.5f)
         {

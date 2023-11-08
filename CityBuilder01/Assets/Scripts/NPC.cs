@@ -25,7 +25,7 @@ public class NPC : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [SerializeField] private Schedule[] scheduleArray;
-    private int scheduleIndex = 0;
+    [SerializeField] private int scheduleIndex = 0;
 
     private void Start()
     {
@@ -42,8 +42,16 @@ public class NPC : MonoBehaviour
             case NpcState.NPC_Wandering:
                 SetRandomDestination();
                 break;
-            case NpcState.NPC_FollowSched:
-                // ScheduleHandler();
+            // case NpcState.NPC_FollowSched:
+            //     if(scheduleArray != null) ScheduleHandler();
+            //     break;
+            // case NpcState.NPC_ForceTalking:
+            //     // transform.LookAt();
+            //     //Look at player
+            //     //Wait for player and npc to finish talking
+            //     //change state
+            //     break;
+            case NpcState.NPC_Waiting:
                 break;
         }
 
@@ -62,6 +70,8 @@ public class NPC : MonoBehaviour
         if(time.Hour == sched.hour && time.Minute == sched.minute) //Check if NPC should start walking to destination
         {
             state = NpcState.NPC_WalkingToDestination; //FOR WALKING
+            // state = NpcState.NPC_FollowSched; //FOR WALKING
+            // navMeshAgent.ResetPath();
             navMeshAgent.SetDestination(destination);
         }
 
@@ -70,6 +80,8 @@ public class NPC : MonoBehaviour
         {
             state = sched.npcStateAtDestination; //Once at destination, change state to do task
             scheduleIndex = (scheduleIndex + 1) % scheduleArray.Length;
+            // if(scheduleIndex != scheduleArray.Length) scheduleIndex++;
+            // else scheduleIndex = 0;
         }
     }
 
@@ -85,14 +97,17 @@ public class NPC : MonoBehaviour
     {
         if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.1f)
         {
-            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * wanderRange;
-            randomDirection += initialPosition;
+            // Calculate a random offset within the wanderRange from the NPC's current position.
+            Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * wanderRange;
+            Vector3 randomDirection = new(randomOffset.x, 0f, randomOffset.y);
+            Vector3 randomPosition = initialPosition + randomDirection;
 
-            if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRange, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomPosition, out NavMeshHit hit, wanderRange, NavMesh.AllAreas))
             {
                 targetPosition = hit.position;
                 navMeshAgent.SetDestination(targetPosition);
             }
         }
     }
+
 }
